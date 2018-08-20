@@ -5,6 +5,8 @@ namespace DNADesign\Elemental\Extensions;
 use DNADesign\Elemental\Models\ElementalArea;
 use SilverStripe\Control\Controller;
 use SilverStripe\View\Parsers\HTML4Value;
+use SilverStripe\View\SSViewer;
+use SilverStripe\Forms\HTMLEditor\HTMLEditorConfig;
 
 class ElementalPageExtension extends ElementalAreasExtension
 {
@@ -27,6 +29,10 @@ class ElementalPageExtension extends ElementalAreasExtension
      */
     public function getElementsForSearch()
     {
+        $cmsThemes = SSViewer::get_themes();
+        $userThemes = HTMLEditorConfig::getThemes();
+        SSViewer::set_themes($userThemes);
+
         $output = [];
         foreach ($this->owner->hasOne() as $key => $class) {
             if ($class !== ElementalArea::class) {
@@ -39,6 +45,7 @@ class ElementalPageExtension extends ElementalAreasExtension
                 $output[] = strip_tags($area->forTemplate());
             }
         }
+        SSViewer::set_themes($cmsThemes);
         return implode($output);
     }
 
